@@ -1,7 +1,9 @@
 from string import punctuation, whitespace
 
-def text_analyzer(text = ''):
-    "This function counts the number of upper characters, lower characters, punctuation and spaces in a given text."
+
+def text_analyzer(text=''):
+    """This function counts the number of upper characters, lower characters,
+punctuation and spaces in a given text."""
 
     if len(locals()) > 1 or not isinstance(text, str):
         print('ERROR')
@@ -29,5 +31,3 @@ def text_analyzer(text = ''):
     print('-', number_of_lower_chars, "lower letters")
     print('-', number_of_punctuation, "punctuation marks")
     print('-', number_of_spaces, "spaces")
-
-text_analyzer(2)
