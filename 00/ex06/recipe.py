@@ -34,6 +34,8 @@ def print_recipe():
 
 
 def print_cookbook():
+    if len(cookbook) == 0:
+        print("cookbook is empty")
     for recipe in cookbook:
         print_recipe_from_cookbook(recipe)
         print('-'*42)

@@ -9,4 +9,5 @@ for c in args:
     else:
         results = c.lower() + results
 
-print(results)
+if len(results):
+    print(results)

@@ -1,12 +1,21 @@
 import sys
 
-args = sys.argv
-if len(args) > 2 or not args[1].isnumeric():
-    print('ERROR')
-    sys.exit(1)
+sys.tracebacklimit = 0
 
-number = int(args[1])
-if number % 2:
+argv = sys.argv
+argc = len(sys.argv)
+
+if argc == 1:
+    print()
+    exit()
+assert argc == 2, 'more than one argument is provided'
+assert argv[1].isdigit(), 'argument is not integer'
+
+number = int(argv[1])
+
+if number == 0:
+    print("I'm Zero.")
+elif number % 2:
     print("I'm Odd.")
 else:
     print("I'm Even.")

@@ -28,6 +28,12 @@ while True:
     elif num < secret_number:
         print('Too Low!')
     else:
-        print("Congratulations, you've got it!")
-        print(f'You won in {attempts} attempts')
+        if secret_number == 42:
+            print("The answer to the ultimate question of life, the universe \
+and everything is 42.")
+        if attempts == 1:
+            print("Congratulations! You got it on your first try!")
+        else:
+            print("Congratulations, you've got it!")
+            print(f'You won in {attempts} attempts')
         break

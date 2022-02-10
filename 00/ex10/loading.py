@@ -17,7 +17,7 @@ def ft_progress(listy):
         remaining_time = '%.2f' %\
             ((now() - starting_time) / items * (length - items))
         elapsed_time = '%.2f' % (now() - starting_time)
-        p_format = 'ETA: {}s [{}%] [{}{}] {}/{} | {}s'
+        p_format = 'ETA: {}s [{}%] [{}{}] {}/{} | elapsed time {}s'
         progress = int(index * bar_len / length)
         progress_str = '=' * progress
         spaces_str = ''
