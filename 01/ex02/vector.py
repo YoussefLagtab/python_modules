@@ -115,11 +115,8 @@ class Vector:
 
         return self.__do_op__(self, None, lambda val, _: val / scalar)
 
-    def __rtruediv__(self, scalar):
-        if not isinstance(scalar, float):
-            raise Exception("scalar must be a float")
-
-        return self.__do_op__(self, None, lambda val, _: scalar / val)
+    def __rtruediv__(self, _scalar):
+        raise ValueError("A scalar cannot be divided by a Vector.")
 
     def __mul__(self, scalar):
         if not isinstance(scalar, float):
