@@ -126,3 +126,16 @@ class Vector:
 
     def __rmul__(self, scalar):
         return self.__mul__(scalar)
+
+    def T(self):
+        values = []
+        for i in range(self.shape[1]):
+            col = []
+            if isinstance(self.values[i], float):
+                col.append(self.values[i])
+            else:
+                for j in range(self.shape[0]):
+                    col.append(self.values[j][i])
+            values.append(col)
+
+        return Vector(values)
