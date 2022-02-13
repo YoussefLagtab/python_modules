@@ -79,35 +79,53 @@ class Vector:
         else:
             return (vec_length, len(self.values[0]))
 
-    def __do_operation__(self, v1, v2, operation_func):
-        if v1.shape != v2.shape:
-            raise Exception("vectors not of the same shape")
-
-        is_list_of_floats = isinstance(v1.values[0], float)
+    def __do_op__(self, v1, v2, operation_func):
         values = []
         for i in range(v1.shape[0]):
-            if is_list_of_floats:
-                for j in range(v1.shape[1]):
-                    val = operation_func(v1.values[i][j], v2.values[i][j])
-                    values.append(val)
-                continue
-
             col = []
             for j in range(v1.shape[1]):
-                val = operation_func(v1.values[i][j], v2.values[i][j])
+                val = v2.values[i][j] if v2 else None
+                val = operation_func(v1.values[i][j], val)
                 col.append(val)
             values.append(col)
 
         return Vector(values)
 
     def __add__(self, other):
-        return self.__do_operation__(self, other, lambda a, b: a + b)
+        if self.shape != other.shape:
+            raise Exception("vectors not of the same shape")
+
+        return self.__do_op__(self, other, lambda val1, val2: val1 + val2)
 
     def __radd__(self, other):
         return other.__add__(self)
 
     def __sub__(self, other):
-        return self.__do_operation__(self, other, lambda a, b: a - b)
+        if self.shape != other.shape:
+            raise Exception("vectors not of the same shape")
+
+        return self.__do_op__(self, other, lambda val1, val2: val1 - val2)
 
     def __rsub__(self, other):
         return other.__sub__(self)
+
+    def __truediv__(self, scalar):
+        if not isinstance(scalar, float):
+            raise Exception("scalar must be a float")
+
+        return self.__do_op__(self, None, lambda val, _: val / scalar)
+
+    def __rtruediv__(self, scalar):
+        if not isinstance(scalar, float):
+            raise Exception("scalar must be a float")
+
+        return self.__do_op__(self, None, lambda val, _: scalar / val)
+
+    def __mul__(self, scalar):
+        if not isinstance(scalar, float):
+            raise Exception("scalar must be a float")
+
+        return self.__do_op__(self, None, lambda val, _: val * scalar)
+
+    def __rmul__(self, scalar):
+        return self.__mul__(scalar)
