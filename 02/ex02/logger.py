@@ -10,10 +10,16 @@ def log(func):
 
         ret = func(*args, **kwargs)
 
-        exec_time = "%.10f" % ((time.time() - begin) * 1000)
+        exec_time = time.time() - begin
+        if exec_time < 1:
+            exec_time = "%.10f" % (exec_time * 1000) + ' ms'
+        else:
+            exec_time = "%.10f" % exec_time + ' s '
         user = os.environ["USER"]
         func_name = str.replace(func.__name__, '_', ' ')
-        line = f'({user})Running: {func_name} [ exec-time = {exec_time} ms ]\n'
+        func_name += ' ' * (19 -  len(func_name))
+
+        line = f'({user})Running: {func_name}[ exec-time = {exec_time} ]\n'
 
         log_file = open("machine.log", "a")
         log_file.write(line)
