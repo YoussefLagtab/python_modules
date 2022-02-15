@@ -31,8 +31,8 @@ class Recipe:
                     "an int strictly posistive"),
             'ingredients':
                 (ingredients, list,
-                    lambda l: all(isinstance(e, str) for e in l),
-                    "a list of strings"),
+                    lambda l: all(isinstance(e, str) and len(e) for e in l),
+                    "a list of non empty strings"),
             'description': (description, str, None, "a string"),
             'recipe_type':
                 (recipe_type, str, lambda e: e in recipe_types,
