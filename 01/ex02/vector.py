@@ -1,6 +1,14 @@
 class InValidVectorTypes(Exception):
     def __str__(self):
-        return "Vector elements must be a floats or a lists of floats"
+        return "Vector elements must be a floats or a lists of float"
+
+
+class InValidOperation(Exception):
+    def __init__(self, type):
+        self.type = type
+
+    def __str__(self):
+        return f"invalid operation between `{self.type}` and `vector`"
 
 
 class Vector:
@@ -28,7 +36,6 @@ class Vector:
 
     def __is_valid_vector__(self, vec):
         elements_type = None
-        col_length = 0
         for ele in vec:
             if not isinstance(ele, list) and not isinstance(ele, float):
                 raise InValidVectorTypes()
@@ -38,13 +45,10 @@ class Vector:
             if not isinstance(ele, elements_type):
                 raise Exception("Can't mix floats with lists")
             if isinstance(ele, list):
-                if not all(isinstance(e, float) for e in ele):
+                if len(ele) != 1:
+                    raise Exception("Columns must have only one float")
+                if not isinstance(ele[0], float):
                     raise InValidVectorTypes()
-                if col_length == 0:
-                    col_length = len(ele)
-                    continue
-                if len(ele) != col_length:
-                    raise Exception("Columns must be of the same length")
 
     def __is_valid_range__(self, _range):
         is_valid = True
@@ -84,30 +88,33 @@ class Vector:
         for i in range(v1.shape[0]):
             col = []
             for j in range(v1.shape[1]):
-                val = v2.values[i][j] if v2 else None
-                val = operation_func(v1.values[i][j], val)
-                col.append(val)
+                if v1.shape[0] == 1:
+                    val1 = v1.values[j]
+                    val2 = v2.values[j] if v2 else None
+                else:
+                    val1 = v1.values[i][j]
+                    val2 = v2.values[i][j] if v2 else None
+                col.append(operation_func(val1, val2))
+
             values.append(col)
 
         return Vector(values)
 
     def __add__(self, other):
-        if self.shape != other.shape:
-            raise Exception("vectors not of the same shape")
+        self.__check_same_shape__(other)
 
         return self.__do_op__(self, other, lambda val1, val2: val1 + val2)
 
     def __radd__(self, other):
-        return other.__add__(self)
+        raise InValidOperation(type(other).__name__)
 
     def __sub__(self, other):
-        if self.shape != other.shape:
-            raise Exception("vectors not of the same shape")
+        self.__check_same_shape__(other)
 
         return self.__do_op__(self, other, lambda val1, val2: val1 - val2)
 
     def __rsub__(self, other):
-        return other.__sub__(self)
+        raise InValidOperation(type(other).__name__)
 
     def __truediv__(self, scalar):
         if not isinstance(scalar, float):
@@ -119,13 +126,17 @@ class Vector:
         raise ValueError("A scalar cannot be divided by a Vector.")
 
     def __mul__(self, scalar):
-        if not isinstance(scalar, float):
-            raise Exception("scalar must be a float")
+        if not isinstance(scalar, int):
+            raise Exception("scalar must be an int")
 
         return self.__do_op__(self, None, lambda val, _: val * scalar)
 
     def __rmul__(self, scalar):
         return self.__mul__(scalar)
+
+    def __check_same_shape__(self, other):
+        if self.shape != other.shape:
+            raise Exception("vectors not of the same shape")
 
     def T(self):
         values = []
@@ -139,3 +150,16 @@ class Vector:
             values.append(col)
 
         return Vector(values)
+
+    def dot(self, other):
+        self.__check_same_shape__(other)
+
+        ret = 0
+
+        for val1, val2 in zip(self.values, other.values):
+            if isinstance(val1, float):
+                ret += val1 * val2
+            else:
+                ret += val1[0] * val2[0]
+
+        return ret
