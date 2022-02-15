@@ -17,8 +17,7 @@ def log(func):
             exec_time = "%.10f" % exec_time + ' s '
         user = os.environ["USER"]
         func_name = str.replace(func.__name__, '_', ' ')
-        func_name += ' ' * (19 -  len(func_name))
-
+        func_name += ' ' * (19 - len(func_name))
         line = f'({user})Running: {func_name}[ exec-time = {exec_time} ]\n'
 
         log_file = open("machine.log", "a")
